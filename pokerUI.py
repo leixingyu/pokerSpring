@@ -19,35 +19,33 @@ class PokerUI(QtWidgets.QMainWindow):
 
         _loadUi(os.path.join(MODULE_PATH, UI_FILE), self)
 
-        self.linkFunc()
-
-    def linkFunc(self):
         self.numEdit.setText('54')
         self.stackEdit.setText('0.015')
         self.offsetEdit.setText('1.5')
 
         self.buildButton.clicked.connect(self.build)
         self.ui_suffle_btn.clicked.connect(self.shuffle)
-        self.ratioSlider.valueChanged.connect(self.completionLink)
-        self.tangentBox.currentIndexChanged.connect(self.tangentLink)
+        self.ratioSlider.valueChanged.connect(self.completion_link)
+        self.tangentBox.currentIndexChanged.connect(self.tangent_link)
 
+    @staticmethod
     def shuffle(self):
-        util.shuffleCards(textureDir=util.textureDir)
+        util.shuffle_cards(util.texture_dir)
 
     def build(self):
         num = int(self.numEdit.text())
         stack = float(self.stackEdit.text())
         offset = float(self.offsetEdit.text())
-        util.deleteNode()
-        util.buildDeck(num=num, stack=stack, holdValue=offset)
+        util.delete_node()
+        util.build_deck(num=num, stack=stack, hold_value=offset)
 
-    def completionLink(self):
-        sliderV = self.ratioSlider.value()
-        cmds.setAttr('pokerPath.completion', sliderV)
+    def completion_link(self):
+        slider_v = self.ratioSlider.value()
+        cmds.setAttr('pokerPath.completion', slider_v)
 
-    def tangentLink(self):
-        tangentV = self.tangentBox.currentIndex()
-        util.setTangent(tangentV)
+    def tangent_link(self):
+        tangent_v = self.tangentBox.currentIndex()
+        util.set_tangent(tangent_v)
 
 
 def show():
