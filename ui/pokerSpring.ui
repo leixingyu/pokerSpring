@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Poker Rig Controller</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -43,7 +43,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="numEdit">
+          <widget class="QLineEdit" name="ui_num_edit">
            <property name="minimumSize">
             <size>
              <width>60</width>
@@ -78,7 +78,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="stackEdit">
+          <widget class="QLineEdit" name="ui_stack_edit">
            <property name="minimumSize">
             <size>
              <width>60</width>
@@ -117,7 +117,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="offsetEdit">
+          <widget class="QLineEdit" name="ui_offset_edit">
            <property name="minimumSize">
             <size>
              <width>60</width>
@@ -152,7 +152,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="tangentBox">
+          <widget class="QComboBox" name="ui_tangent_cbox">
            <property name="minimumSize">
             <size>
              <width>60</width>
@@ -206,7 +206,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="ratioSlider">
+          <widget class="QSlider" name="ui_ratio_slider">
            <property name="minimumSize">
             <size>
              <width>192</width>
@@ -230,7 +230,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="buildButton">
+        <widget class="QPushButton" name="ui_build_btn">
          <property name="text">
           <string>Build</string>
          </property>

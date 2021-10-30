@@ -19,32 +19,33 @@ class PokerUI(QtWidgets.QMainWindow):
 
         _loadUi(os.path.join(MODULE_PATH, UI_FILE), self)
 
-        self.numEdit.setText('54')
-        self.stackEdit.setText('0.015')
-        self.offsetEdit.setText('1.5')
+        self.ui_num_edit.setText('54')
+        self.ui_stack_edit.setText('0.015')
+        self.ui_offset_edit.setText('1.5')
 
-        self.buildButton.clicked.connect(self.build)
+        self.ui_build_btn.clicked.connect(self.build)
         self.ui_suffle_btn.clicked.connect(self.shuffle)
-        self.ratioSlider.valueChanged.connect(self.completion_link)
-        self.tangentBox.currentIndexChanged.connect(self.tangent_link)
+        self.ui_ratio_slider.valueChanged.connect(self.completion_link)
+        self.ui_tangent_cbox.currentIndexChanged.connect(self.tangent_link)
 
     @staticmethod
-    def shuffle(self):
-        util.shuffle_cards(util.texture_dir)
+    def shuffle():
+        util.shuffle_cards(util.TEXTURE_DIR)
 
     def build(self):
-        num = int(self.numEdit.text())
-        stack = float(self.stackEdit.text())
-        offset = float(self.offsetEdit.text())
-        util.delete_node()
+        num = int(self.ui_num_edit.text())
+        stack = float(self.ui_stack_edit.text())
+        offset = float(self.ui_offset_edit.text())
+
+        util.delete_previous()
         util.build_deck(num=num, stack=stack, hold_value=offset)
 
     def completion_link(self):
-        slider_v = self.ratioSlider.value()
+        slider_v = self.ui_ratio_slider.value()
         cmds.setAttr('pokerPath.completion', slider_v)
 
     def tangent_link(self):
-        tangent_v = self.tangentBox.currentIndex()
+        tangent_v = self.ui_tangent_cbox.currentIndex()
         util.set_tangent(tangent_v)
 
 
