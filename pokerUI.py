@@ -38,7 +38,12 @@ class PokerUI(QtWidgets.QMainWindow):
         offset = float(self.ui_offset_edit.text())
 
         util.delete_previous()
-        util.build_deck(num=num, stack=stack, hold_value=offset)
+        cards = util.build_deck(num=num, stack=stack, hold_value=offset)
+        util.connect_node(cards)
+        util.assign_texture(cards)
+        #util.shuffle_cards(cards)
+        util.add_bend(cards)
+        util.randomize_offset(cards)
 
     def completion_link(self):
         slider_v = self.ui_ratio_slider.value()

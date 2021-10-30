@@ -5,6 +5,8 @@ import os
 
 import maya.cmds as cmds
 
+from utility.file import operation
+
 MODULE_PATH = os.path.dirname(__file__)
 TEXTURE_FOLDER = r'cards'
 
@@ -20,7 +22,10 @@ def delete_previous():
         'finalRotationNode*',
         'addDoubleLinear*',
         'PokerMat*',
-        'place2dTexture*'
+        'place2dTexture*',
+        'file*',
+        'conditionNode_*',
+        'motion_path*'
     )
     group = cmds.ls(DECK_GROUP)
 
@@ -61,10 +66,7 @@ def build_deck(num=54, stack=0.015, hold_value=1.5):
         cmds.connectAttr('{}.pathValue'.format(card), 'motion_path{}.uValue'.format(i), force=1)
         cmds.keyTangent(card, lock=0, itt='auto', ott='auto', index=[(1, 1), (2, 2)])
 
-    connect_node(cards)
-    assign_texture(cards)
-    add_bend()
-    randomize_offset(cards)
+    return cards
 
 
 def connect_node(cards):
@@ -91,8 +93,7 @@ def connect_node(cards):
         cmds.connectAttr('{}.output1D'.format(rot_cal), 'motion_path{}.frontTwist'.format(i), f=1)
 
 
-def add_bend():
-    cards = cmds.ls('card*', transforms=1)
+def add_bend(cards):
     for card in cards:
         bend = cmds.nonLinear(card, type='bend')[1]
         if not cmds.ls('bendHandleLayer'):
@@ -100,16 +101,16 @@ def add_bend():
         else:
             cmds.editDisplayLayerMembers('bendHandleLayer', bend)
         cmds.parent(bend, card)
-        cmds.setAttr(bend+'.rx', 90)
-        cmds.setAttr(bend+'.ry', 0)
-        cmds.setAttr(bend+'.rz', 90)
+        cmds.setAttr('{}.rx'.format(bend), 90)
+        cmds.setAttr('{}.ry'.format(bend), 0)
+        cmds.setAttr('{}.rz'.format(bend), 90)
 
 
 def get_card_front(directory):
-    files = os.listdir(directory)
-    card_front = []
+    files = operation.get_files(directory)
+    card_front = list()
     for f in files:
-        if f != 'back.png' and f != 'alpha.png':
+        if f not in ['back.png', 'alpha.png']:
             card_front.append(f)
     return card_front
 
@@ -137,16 +138,17 @@ def assign_texture(cards):
         cmds.hyperShade(assign=material)
         cmds.polyContourProjection()
 
-    shuffle_cards(cards, TEXTURE_DIR)
+    shuffle_cards(cards=cards)
 
     place2ds = cmds.ls('place2dTexture*')
     for place2d in place2ds:
         cmds.setAttr(place2d+'.rotateFrame', 90)
 
 
-def shuffle_cards(cards=cmds.ls('card*', transforms=1), directory=TEXTURE_DIR):
+def shuffle_cards(directory=TEXTURE_DIR, cards=cmds.ls('card*', transforms=1)):
     card_front = get_card_front(directory)
     random.shuffle(card_front)
+
     for i in range(len(cards)):
         connect_texture(os.path.join(directory, card_front[i]), 'PokerMatFront_{}'.format(i), 'color')
     logging.info('shuffled')
@@ -187,8 +189,7 @@ def set_tangent(value, num=54, hold_value=1.5):
         set_angle(cos_angle)
 
 
-def set_angle(angle):
-    cards = cmds.ls('card*', transforms=1)
+def set_angle(angle, cards=cmds.ls('card*', transforms=1)):
     for card in cards:
         # out angle of the first tangent
         cmds.keyTangent('{}.pathValue'.format(card), index=[(1, 1)], oa=angle)
@@ -229,8 +230,8 @@ def connect_texture(image, material, input_node):
 
         cmds.connectAttr('{}.outUV'.format(new_placer), '{}.uvCoord'.format(new_file))
         cmds.connectAttr('{}.outUvFilterSize'.format(new_placer), '{}.uvFilterSize'.format(new_file))
-        for i in connections:
-            cmds.connectAttr('{}.{}'.format(new_placer, i), '{}.{}'.format(new_file, i))
+        for c in connections:
+            cmds.connectAttr('{}.{}'.format(new_placer, c), '{}.{}'.format(new_file, c))
 
         # now connect the file texture output to the material input
         cmds.connectAttr('{}.outColor'.format(new_file), '{}.{}'.format(material, input_node), f=1)
