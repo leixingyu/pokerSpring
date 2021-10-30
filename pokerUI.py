@@ -5,8 +5,8 @@ import maya.cmds as cmds
 from utility._vendor.Qt import QtWidgets, QtCore, QtGui
 from utility._vendor.Qt import _loadUi
 
-import pokerSpringFunc
-reload(pokerSpringFunc)
+import util
+reload(util)
 
 MODULE_PATH = os.path.dirname(__file__)
 UI_FILE = r'ui/pokerSpring.ui'
@@ -32,14 +32,14 @@ class PokerUI(QtWidgets.QMainWindow):
         self.tangentBox.currentIndexChanged.connect(self.tangentLink)
 
     def shuffle(self):
-        pokerSpringFunc.shuffleCards(textureDir=pokerSpringFunc.textureDir)
+        util.shuffleCards(textureDir=util.textureDir)
 
     def build(self):
         num = int(self.numEdit.text())
         stack = float(self.stackEdit.text())
         offset = float(self.offsetEdit.text())
-        pokerSpringFunc.deleteNode()
-        pokerSpringFunc.buildDeck(num=num, stack=stack, holdValue=offset)
+        util.deleteNode()
+        util.buildDeck(num=num, stack=stack, holdValue=offset)
 
     def completionLink(self):
         sliderV = self.ratioSlider.value()
@@ -47,7 +47,7 @@ class PokerUI(QtWidgets.QMainWindow):
 
     def tangentLink(self):
         tangentV = self.tangentBox.currentIndex()
-        pokerSpringFunc.setTangent(tangentV)
+        util.setTangent(tangentV)
 
 
 def show():

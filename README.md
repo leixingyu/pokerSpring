@@ -13,7 +13,8 @@ to run the tool for controlling the rig, open the base scene and run the followi
 command:
 
 ```python
-import pokerSpring.pokerSpring as ps
+import pokerSpring.pokerUI as ps
+
 ps.show()
 ```
 

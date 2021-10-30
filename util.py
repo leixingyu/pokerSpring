@@ -6,9 +6,10 @@ import random
 advance = True
 
 MODULE_PATH = os.path.dirname(__file__)
-TEXTURES = r'cardTexture'
+TEXTURES = r'cards'
 
 textureDir = os.path.join(MODULE_PATH, TEXTURES)
+
 
 def deleteNode():
     if (cmds.ls('Deck')):
