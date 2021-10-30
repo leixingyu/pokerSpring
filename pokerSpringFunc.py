@@ -4,7 +4,11 @@ import math
 import random
 
 advance = True
-textureDir = 'C:/Users/Lei/Desktop/cardTexture'
+
+MODULE_PATH = os.path.dirname(__file__)
+TEXTURES = r'cardTexture'
+
+textureDir = os.path.join(MODULE_PATH, TEXTURES)
 
 def deleteNode():
     if (cmds.ls('Deck')):
@@ -14,6 +18,7 @@ def deleteNode():
     if (cmds.ls('curveLengthNode*', 'influencePmultiplierNode*', 'finalRotationNode*', 'addDoubleLinear*', 'PokerMat*')):
         nodes = cmds.ls('curveLengthNode*', 'influencePmultiplierNode*', 'finalRotationNode*', 'addDoubleLinear*', 'PokerMat*', 'place2dTexture*')
         cmds.delete(nodes)
+
 
 def buildDeck(num=54, stack=0.015, holdValue=1.5):
 
@@ -55,6 +60,7 @@ def buildDeck(num=54, stack=0.015, holdValue=1.5):
         addBlend()
     randomOffest(cards)
 
+
 def connectNode(cards):
     leftCtrl = cmds.ls('leftc')[0]
     rightCtrl = cmds.ls('rightc')[0]
@@ -82,6 +88,7 @@ def connectNode(cards):
 
         cmds.connectAttr(rotCal+'.output1D', 'mopathtest%s.frontTwist' % str(i), f=True)
 
+
 def addBlend():
     cards = cmds.ls('card*', transforms=True)
     for card in cards:
@@ -95,6 +102,7 @@ def addBlend():
         cmds.setAttr(bend+'.ry', 0)
         cmds.setAttr(bend+'.rz', 90)
 
+
 def getCardFront(textureDir):
     files = os.listdir(textureDir)
     cardFront = []
@@ -102,6 +110,7 @@ def getCardFront(textureDir):
         if file != 'back.png' and file != 'alpha.png':
             cardFront.append(file)
     return cardFront
+
 
 def assignTexture(cards):
     # assign card back textures
@@ -133,6 +142,7 @@ def assignTexture(cards):
         if advance:
             cmds.setAttr(place2d+'.rotateFrame', 90)
 
+
 def shuffleCards(cards = cmds.ls('card*', transforms=True), textureDir=textureDir):
     print('shuffle')
     cardFront = getCardFront(textureDir)
@@ -140,50 +150,6 @@ def shuffleCards(cards = cmds.ls('card*', transforms=True), textureDir=textureDi
     for i in range(len(cards)):
         connectTex(textureDir + '/' + cardFront[i], 'PokerMatFront_%s' % str(i), 'color')
 
-'''
-def assignTexture(cards):
-    textureDir = 'C:/Users/Lei/Desktop/cardTexture'
-    files = os.listdir(textureDir)
-    cardFront = []
-    for file in files:
-        if file != 'back.png':
-            cardFront.append(file)
-
-    # shuffle card front texture
-    shuffleCard(cards, cardFront, textureDir)
-
-    # assign card back textures
-    cmds.shadingNode('phong', asShader=True, name='PokerMatBack')
-    for card in cards:
-        if not advance:
-            backFace = card + '.f[3]'
-        elif advance:
-            backFace = card + '.f[12:21]'
-        cmds.select(backFace)
-        cmds.hyperShade(assign='PokerMatBack')
-        cmds.polyContourProjection()
-    connectTex(textureDir + '/back.png', 'PokerMatBack', 'color')
-
-    place2ds = cmds.ls('place2dTexture*')
-    for place2d in place2ds:
-        if not advance:
-            cmds.setAttr(place2d+'.rotateFrame', 90)
-
-def shuffleCard(cards, cardFront, textureDir):
-    random.shuffle(cardFront)
-    for i, card in enumerate(cards):
-        if not advance:
-            frontFace = card + '.f[1]'
-        elif advance:
-            frontFace = card + '.f[1:10]'
-
-        cmds.shadingNode('phong', asShader=True, name='PokerMat_%s' % str(i))
-        cmds.select(frontFace)
-        cmds.hyperShade(assign='PokerMat_%s' % str(i))
-
-        connectTex(textureDir + '/' + cardFront[i], 'PokerMat_%s' % str(i), 'color')
-        cmds.select(frontFace)
-        cmds.polyContourProjection()'''
 
 def randomOffest(cards):
     for i, card in enumerate(cards):
@@ -201,6 +167,7 @@ def randomOffest(cards):
             cmds.setDrivenKeyframe(card + '.r'+axis, currentDriver=card + '.pathValue', dv=0.1, v=0)
             cmds.setDrivenKeyframe(card + '.r' + axis, currentDriver=card + '.pathValue', dv=0.9, v=0)
 
+
 def setTangent(value, num=54, holdValue=1.5):
     # edit tangent
     tan = 1.00 / (100 - num * holdValue)
@@ -217,6 +184,7 @@ def setTangent(value, num=54, holdValue=1.5):
     elif value is 1:
         setAngle(cosAngle)
 
+
 def setAngle(angle):
     cards = cmds.ls('card*', transforms=True)
     for card in cards:
@@ -224,6 +192,7 @@ def setAngle(angle):
         cmds.keyTangent(card+'.pathValue', index=[(1, 1)], oa=angle)
         # in angle of the second tangent
         cmds.keyTangent(card+'.pathValue', index=[(2, 2)], ia=angle)
+
 
 def connectTex(image,material,input):
     # if a file texture is already connected to this input, update it
@@ -247,6 +216,3 @@ def connectTex(image,material,input):
         # now set attributes on the file node.
         cmds.setAttr(newFile+'.fileTextureName', image, type='string')
         cmds.setAttr(newFile+'.filterType', 0)
-
-
-
