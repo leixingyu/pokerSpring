@@ -1,12 +1,10 @@
 import os
 
 import maya.cmds as cmds
-
-from utility._vendor.Qt import QtWidgets, QtCore, QtGui
-from utility._vendor.Qt import _loadUi
+from Qt import QtWidgets
+from Qt import _loadUi
 
 import util
-reload(util)
 
 MODULE_PATH = os.path.dirname(__file__)
 UI_FILE = r'ui/pokerSpring.ui'
@@ -14,7 +12,6 @@ UI_FILE = r'ui/pokerSpring.ui'
 
 class PokerUI(QtWidgets.QMainWindow):
     def __init__(self):
-
         super(PokerUI, self).__init__()
 
         _loadUi(os.path.join(MODULE_PATH, UI_FILE), self)
